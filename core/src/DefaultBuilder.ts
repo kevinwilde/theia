@@ -153,6 +153,11 @@ class DefaultBuilder implements Builder {
       throw new Error(errors.join('\n====\n') || 'Unknown error while building')
     })
 
+    if (await doPromiseExec('git status --short', { cwd: workingDir })) {
+      await doPromiseExec('git reset --hard && git clean -fd', { cwd: workingDir })
+      throw new Error(`Building ${componentLibrary} resulted in uncommitted changes`)
+    }
+
     if (!fs.existsSync(path.join(workingDir, 'dist', 'stats-browser.json'))) {
       throw new Error(`Building ${componentLibrary} did not emit a browser stats file`)
     }
