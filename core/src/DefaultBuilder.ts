@@ -154,8 +154,9 @@ class DefaultBuilder implements Builder {
     })
 
     if (await doPromiseExec('git status --short', { cwd: workingDir })) {
+      const diff = await doPromiseExec('git diff', { cwd: workingDir })
       await doPromiseExec('git reset --hard && git clean -fd', { cwd: workingDir })
-      throw new Error(`Building ${componentLibrary} resulted in uncommitted changes`)
+      throw new Error(`Building ${componentLibrary} resulted in unexpected changes\n${diff}`)
     }
 
     if (!fs.existsSync(path.join(workingDir, 'dist', 'stats-browser.json'))) {
