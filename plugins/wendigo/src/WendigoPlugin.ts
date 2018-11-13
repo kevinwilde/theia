@@ -23,7 +23,7 @@ class WendigoPlugin implements Plugin {
   // create errors if the same component/props is rendered repeatedly, which suggests a cache failure
   // before render, because props can possibly be modified during render
   onBeforeRender = ({ core, req, componentLibrary, component, props }: CoreHooks.OnBeforeRenderArgs) => {
-    if (!req.query.wendigo) {
+    if (req.query.wendigo !== 'true') {
       return Promise.resolve()
     }
 
